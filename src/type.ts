@@ -20,6 +20,13 @@ export interface SearchUser {
   track: Track;
 }
 
+export interface Member {
+  _id: string;
+  name: string;
+  email: string;
+  track: Track;
+}
+
 export interface ProjectPreview {
   _id: string;
   name: string;
@@ -29,13 +36,26 @@ export interface ProjectPreview {
   createdAt: string;
   lead: { _id: string; name: string };
   isMember: boolean;
+  lookingForMembers: boolean;
+  lookingFor: string;
+  memberCount: number;
 }
 
-export interface Member {
+export interface Milestone {
   _id: string;
-  name: string;
-  email: string;
-  track: Track;
+  title: string;
+  dueDate?: string;
+  done: boolean;
+}
+
+export interface Submission {
+  summary: string;
+  repoUrl: string;
+  demoUrl: string;
+  presentationUrl: string;
+  docsUrl: string;
+  screenshots: string[];
+  submittedAt?: string;
 }
 
 export interface ProjectDetailData {
@@ -47,6 +67,14 @@ export interface ProjectDetailData {
   createdAt: string;
   lead: Member;
   members: Member[];
+  problemStatement: string;
+  proposedSolution: string;
+  lookingForMembers: boolean;
+  lookingFor: string;
+  roles: { user: string; title: string }[];
+  updates: { _id: string; author: { _id: string; name: string } | null; text: string; createdAt: string }[];
+  milestones: Milestone[];
+  submission: Submission;
 }
 
 export interface Task {
@@ -55,4 +83,16 @@ export interface Task {
   status: "TODO" | "DONE";
   assignee: Member;
   uploads: { fileUrl: string; uploadedAt: string }[];
+}
+
+export interface WorkspaceData {
+  project: ProjectDetailData;
+  locked: boolean;
+  settings: { submissionDeadline: string | null; minTeamSize: number; maxTeamSize: number };
+}
+
+export interface TabProps {
+  data: WorkspaceData;
+  isLead: boolean;
+  reload: () => void;
 }

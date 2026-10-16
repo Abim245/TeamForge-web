@@ -15,21 +15,21 @@ export default function CreateProject() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [track, setTrack] = useState<Track | "">("");
+  const [recruiting, setRecruiting] = useState(false);
+  const [lookingFor, setLookingFor] = useState("");
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<SearchUser[]>([]);
   const [selected, setSelected] = useState<SearchUser[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
-  // search registered users 300ms after the person stops typing
   useEffect(() => {
     if (search.trim().length < 2) {
       setResults([]);
       return;
     }
     const timer = setTimeout(() => {
-      api
-        .get("/users", { params: { search: search.trim() } })
+      api.get("/users", { params: { search: search.trim() } })
         .then((r) => setResults(r.data.users))
         .catch(() => setResults([]));
     }, 300);
@@ -45,9 +45,16 @@ export default function CreateProject() {
 
     setBusy(true);
     try {
-      const res = await api.post("/projects", { name: name.trim(), description: description.trim(), track });
+      const res = await api.post("/projects", {
+        name: name.trim(),
+        description: description.trim(),
+        track,
+        lookingForMembers: recruiting,
+        lookingFor: recruiting ? lookingFor.trim() : "",
+      });
       const id = res.data.project._id as string;
-      await Promise.all(selected.map((u) => api.post(`/projects/${id}/members`, { userId: u._id })));
+      // invitations are best effort: the project exists even if one fails
+      await Promise.allSettled(selected.map((u) => api.post(`/projects/${id}/invitations`, { userId: u._id })));
       navigate(`/projects/${id}`);
     } catch (err) {
       setError(errorMessage(err));
@@ -63,7 +70,7 @@ export default function CreateProject() {
       </Link>
       <p className="mt-6 text-xs font-semibold tracking-widest text-brand">NEW WORKSPACE</p>
       <h1 className="mt-1 text-4xl font-normal tracking-tight">Create a project</h1>
-      <p className="mt-2 text-slate-500">Set the direction, pick your challenge track, and invite registered teammates.</p>
+      <p className="mt-2 text-slate-500">Set the direction, pick your challenge track, and invite or recruit teammates.</p>
 
       <form onSubmit={onSubmit} className="mt-6 space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         {error && <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
@@ -90,9 +97,22 @@ export default function CreateProject() {
             <Users size={20} className="mt-0.5 shrink-0 text-brand" />
             <div>
               <p className="font-semibold text-slate-900">You'll be the team lead</p>
-              <p className="text-sm text-slate-500">Project creators manage members, tasks, and final submission.</p>
+              <p className="text-sm text-slate-500">You manage invitations and join requests, and send the final submission.</p>
             </div>
           </div>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 p-4">
+          <label className="flex items-center gap-3 text-sm font-semibold text-slate-800">
+            <input type="checkbox" checked={recruiting} onChange={(e) => setRecruiting(e.target.checked)}
+              className="h-4 w-4 accent-brand" />
+            My team is looking for members
+          </label>
+          {recruiting && (
+            <input value={lookingFor} onChange={(e) => setLookingFor(e.target.value)} maxLength={200}
+              placeholder="Who are you looking for? e.g. a designer or a data analyst"
+              className={`${inputClass} mt-3`} />
+          )}
         </div>
 
         <div>
@@ -121,17 +141,20 @@ export default function CreateProject() {
           )}
 
           {selected.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {selected.map((u) => (
-                <span key={u._id} className="flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-brand">
-                  {u.name}
-                  <button type="button" aria-label={`Remove ${u.name}`}
-                    onClick={() => setSelected(selected.filter((s) => s._id !== u._id))}>
-                    <X size={14} />
-                  </button>
-                </span>
-              ))}
-            </div>
+            <>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selected.map((u) => (
+                  <span key={u._id} className="flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-brand">
+                    {u.name}
+                    <button type="button" aria-label={`Remove ${u.name}`}
+                      onClick={() => setSelected(selected.filter((s) => s._id !== u._id))}>
+                      <X size={14} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <p className="mt-2 text-sm text-slate-500">They'll get an invitation and join once they accept.</p>
+            </>
           )}
         </div>
 

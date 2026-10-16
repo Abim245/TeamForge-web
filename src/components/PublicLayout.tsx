@@ -21,6 +21,7 @@ export default function PublicLayout() {
                   </span>
                   {user.name}
                 </span>
+                <Link to="/requests" className="text-sm font-medium text-slate-500 hover:text-slate-900">Requests</Link>
                 <Link to="/projects/new" className={`${primaryBtn} !px-4 !py-2 text-sm`}>
                   <Plus size={16} /> New project
                 </Link>

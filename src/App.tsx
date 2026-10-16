@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreateProject from "./pages/CreateProject";
 import ProjectDetail from "./pages/ProjectDetail";
+import Requests from "./pages/Request";
 
 export default function App() {
   return (
@@ -19,7 +20,8 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<WorkspaceLayout />}>
           <Route path="/projects/new" element={<CreateProject />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
+
+          <Route path="/projects/:id" element={<ProjectDetail />} /><Route path="/requests" element={<Requests />} />
         </Route>
       </Route>
     </Routes>
