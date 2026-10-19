@@ -1,4 +1,7 @@
 export type Track = "AI" | "DATA_SCIENCE" | "CYBERSECURITY";
+export type Role = "PARTICIPANT" | "MENTOR" | "JUDGE" | "ADMIN";
+export type ApprovalStatus = "PENDING" | "APPROVED" | "REJECTED";
+export type ProjectLabel = "NONE" | "FINALIST" | "WINNER";
 
 export const TRACK_LABELS: Record<Track, string> = {
   AI: "AI",
@@ -6,11 +9,14 @@ export const TRACK_LABELS: Record<Track, string> = {
   CYBERSECURITY: "Cybersecurity",
 };
 
+export const ROLES: Role[] = ["PARTICIPANT", "MENTOR", "JUDGE", "ADMIN"];
+
 export interface User {
   id: string;
   name: string;
   email: string;
   track: Track;
+  role: Role;
 }
 
 export interface SearchUser {
@@ -39,6 +45,9 @@ export interface ProjectPreview {
   lookingForMembers: boolean;
   lookingFor: string;
   memberCount: number;
+  label: ProjectLabel;
+  publicConsent: boolean;
+  approvalStatus: ApprovalStatus;
 }
 
 export interface Milestone {
@@ -56,6 +65,8 @@ export interface Submission {
   docsUrl: string;
   screenshots: string[];
   submittedAt?: string;
+  termsAcceptedAt?: string;
+  termsVersion?: string;
 }
 
 export interface ProjectDetailData {
@@ -75,6 +86,10 @@ export interface ProjectDetailData {
   updates: { _id: string; author: { _id: string; name: string } | null; text: string; createdAt: string }[];
   milestones: Milestone[];
   submission: Submission;
+  publicConsent: boolean;
+  approvalStatus: ApprovalStatus;
+  approvalNote: string;
+  label: ProjectLabel;
 }
 
 export interface Task {
@@ -95,4 +110,82 @@ export interface TabProps {
   data: WorkspaceData;
   isLead: boolean;
   reload: () => void;
+}
+
+export interface NotificationItem {
+  _id: string;
+  type: string;
+  title: string;
+  body: string;
+  link: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface AnnouncementItem {
+  _id: string;
+  title: string;
+  body: string;
+  kind: "ANNOUNCEMENT" | "DEADLINE" | "PRESENTATION";
+  eventDate?: string;
+  createdAt: string;
+}
+
+export interface SettingsData {
+  submissionDeadline: string | null;
+  minTeamSize: number;
+  maxTeamSize: number;
+  maxTeamsPerUser: number;
+}
+
+export interface PublicProjectData {
+  _id: string;
+  name: string;
+  description: string;
+  track: Track;
+  label: ProjectLabel;
+  problemStatement: string;
+  proposedSolution: string;
+  members: { _id: string; name: string; track: Track; title: string }[];
+  submission: {
+    summary: string;
+    repoUrl: string;
+    demoUrl: string;
+    presentationUrl: string;
+    docsUrl: string;
+    screenshots: string[];
+  };
+}
+
+export interface AdminStats {
+  users: number;
+  usersByTrack: Record<string, number>;
+  projects: number;
+  submitted: number;
+  awaitingReview: number;
+  approved: number;
+  recruiting: number;
+}
+
+export interface AdminUser {
+  _id: string;
+  name: string;
+  email: string;
+  track: Track;
+  role: Role;
+  team: string;
+  createdAt: string;
+}
+
+export interface AdminProjectRow {
+  _id: string;
+  name: string;
+  track: Track;
+  submitted: boolean;
+  publicConsent: boolean;
+  approvalStatus: ApprovalStatus;
+  label: ProjectLabel;
+  memberCount: number;
+  lead: { _id: string; name: string; email: string } | null;
+  createdAt: string;
 }

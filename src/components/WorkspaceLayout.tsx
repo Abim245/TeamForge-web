@@ -1,11 +1,11 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { FolderPlus, Home, LogOut } from "lucide-react";
+import { Bell, FolderPlus, Home, Inbox, LogOut, Megaphone, ShieldCheck } from "lucide-react";
 import Logo from "./Logo";
 import { useAuth } from "../context/AutoContext";
 import { TRACK_LABELS } from "../type";
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium ${
+  `flex items-center gap-3 whitespace-nowrap rounded-lg px-3 py-3 text-sm font-medium ${
     isActive ? "bg-blue-50 text-brand" : "text-slate-600 hover:bg-slate-50"
   }`;
 
@@ -23,9 +23,15 @@ export default function WorkspaceLayout() {
       <aside className="flex w-full flex-col border-b border-slate-200 bg-white p-4 md:min-h-screen md:w-64 md:border-b-0 md:border-r">
         <div className="px-2 py-2"><Logo /></div>
         <p className="mt-6 px-3 text-xs font-semibold tracking-widest text-slate-500">WORKSPACE</p>
-        <nav className="mt-3 flex gap-1 md:flex-col">
+        <nav className="mt-3 flex gap-1 overflow-x-auto md:flex-col">
           <NavLink to="/" end className={navClass}><Home size={18} /> Project gallery</NavLink>
           <NavLink to="/projects/new" className={navClass}><FolderPlus size={18} /> Create project</NavLink>
+          <NavLink to="/requests" className={navClass}><Inbox size={18} /> Requests</NavLink>
+          <NavLink to="/notifications" className={navClass}><Bell size={18} /> Notifications</NavLink>
+          <NavLink to="/announcements" className={navClass}><Megaphone size={18} /> Announcements</NavLink>
+          {user?.role === "ADMIN" && (
+            <NavLink to="/admin" className={navClass}><ShieldCheck size={18} /> Admin</NavLink>
+          )}
         </nav>
 
         <div className="mt-auto hidden border-t border-slate-200 pt-4 md:block">

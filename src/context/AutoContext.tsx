@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { api } from "../api/client";
-import type { Track, User } from "../type";
+import type { Role, Track, User } from "../type";
 
 interface RegisterData {
   name: string;
   email: string;
   password: string;
   track: Track;
+  acceptTerms: boolean;
 }
 
 interface AuthValue {
@@ -21,8 +22,8 @@ interface AuthValue {
 const AuthContext = createContext<AuthValue | null>(null);
 
 // /auth/me returns _id, login returns id: normalise both
-function toUser(u: { id?: string; _id?: string; name: string; email: string; track: Track }): User {
-  return { id: (u.id ?? u._id) as string, name: u.name, email: u.email, track: u.track };
+function toUser(u: { id?: string; _id?: string; name: string; email: string; track: Track; role?: Role }): User {
+  return { id: (u.id ?? u._id) as string, name: u.name, email: u.email, track: u.track, role: u.role ?? "PARTICIPANT" };
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {

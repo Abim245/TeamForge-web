@@ -1,39 +1,36 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AutoContext";
 import JoinRequestButton from "./JoinRequestButton";
-import { TRACK_LABELS } from "../type";
-import type { ProjectPreview, Track } from "../type";
+import TrackBadge from "./TrackBadge";
+import Badge from "./Badge";
+import { formatDate } from "../format";
+import type { ProjectPreview } from "../type";
 
-const trackStyle: Record<Track, string> = {
-  AI: "bg-indigo-50 text-indigo-700",
-  DATA_SCIENCE: "bg-blue-50 text-blue-700",
-  CYBERSECURITY: "bg-amber-50 text-amber-800",
-};
+// What the team sees about their own project's visibility
+function visibility(p: ProjectPreview) {
+  if (!p.submitted) return { text: "Draft", tone: "gray" as const };
+  if (!p.publicConsent) return { text: "Private", tone: "gray" as const };
+  if (p.approvalStatus === "APPROVED") return { text: "Public", tone: "green" as const };
+  if (p.approvalStatus === "REJECTED") return { text: "Changes requested", tone: "red" as const };
+  return { text: "Awaiting review", tone: "amber" as const };
+}
 
 export default function ProjectCard({ project }: { project: ProjectPreview }) {
   const { user } = useAuth();
-  const date = new Date(project.createdAt).toLocaleDateString("en-US", {
-    month: "short", day: "numeric", year: "numeric",
-  });
+  const isPublic = project.publicConsent && project.approvalStatus === "APPROVED";
+  const vis = visibility(project);
 
   return (
     <article className="flex flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center justify-between gap-2">
-        <span className={`rounded-md px-2.5 py-1 text-xs font-semibold ${trackStyle[project.track]}`}>
-          {TRACK_LABELS[project.track]}
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <TrackBadge track={project.track} />
         <div className="flex gap-2">
-          {project.lookingForMembers && !project.isMember && (
-            <span className="rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">Recruiting</span>
-          )}
-          {project.submitted ? (
-            <span className="flex items-center gap-1.5 rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" /> Submitted
-            </span>
+          {project.label === "WINNER" && <Badge tone="amber">Winner</Badge>}
+          {project.label === "FINALIST" && <Badge tone="blue">Finalist</Badge>}
+          {project.isMember ? (
+            <Badge tone={vis.tone}>{vis.text}</Badge>
           ) : (
-            <span className="flex items-center gap-1.5 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-slate-500" /> Draft
-            </span>
+            project.lookingForMembers && <Badge tone="green">Recruiting</Badge>
           )}
         </div>
       </div>
@@ -48,17 +45,23 @@ export default function ProjectCard({ project }: { project: ProjectPreview }) {
         <div>
           <p className="text-sm font-medium text-slate-900">{project.lead.name}</p>
           <p className="text-sm text-slate-500">
-            Created {date} · {project.memberCount} {project.memberCount === 1 ? "member" : "members"}
+            Created {formatDate(project.createdAt)} · {project.memberCount} {project.memberCount === 1 ? "member" : "members"}
           </p>
         </div>
       </div>
 
-      <div className="mt-5">
-        {project.isMember ? (
-          <Link to={`/projects/${project._id}`} className="text-sm font-semibold text-brand hover:underline">
+      <div className="mt-5 space-y-3">
+        {project.isMember && (
+          <Link to={`/projects/${project._id}`} className="block text-sm font-semibold text-brand hover:underline">
             Open workspace
           </Link>
-        ) : project.lookingForMembers ? (
+        )}
+        {isPublic && (
+          <Link to={`/showcase/${project._id}`} className="block text-sm font-semibold text-brand hover:underline">
+            View project
+          </Link>
+        )}
+        {!project.isMember && project.lookingForMembers && (
           <div className="space-y-3">
             <p className="text-sm text-slate-600">
               <span className="font-semibold">Looking for:</span> {project.lookingFor || "teammates"}
@@ -66,13 +69,9 @@ export default function ProjectCard({ project }: { project: ProjectPreview }) {
             {user ? (
               <JoinRequestButton projectId={project._id} />
             ) : (
-              <Link to="/login" className="text-sm font-semibold text-brand hover:underline">
-                Sign in to request to join
-              </Link>
+              <Link to="/login" className="text-sm font-semibold text-brand hover:underline">Sign in to request to join</Link>
             )}
           </div>
-        ) : (
-          <span className="text-sm font-medium text-slate-500">Public submission</span>
         )}
       </div>
     </article>

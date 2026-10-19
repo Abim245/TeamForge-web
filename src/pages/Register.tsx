@@ -20,6 +20,7 @@ export default function Register() {
   const [confirm, setConfirm] = useState("");
   const [track, setTrack] = useState<Track | "">("");
   const [error, setError] = useState("");
+  const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function onSubmit(e: FormEvent) {
@@ -28,11 +29,11 @@ export default function Register() {
     if (password.length < 8) return setError("Password must be at least 8 characters");
     if (password !== confirm) return setError("Passwords do not match");
     if (!track) return setError("Please choose your track");
+    if (!accepted) return setError("Please accept the terms and conditions");
 
     setBusy(true);
     try {
-      await register({ name: name.trim(), email: email.trim(), password, track });
-      navigate("/", { replace: true });
+      await register({ name: name.trim(), email: email.trim(), password, track, acceptTerms: true });      navigate("/", { replace: true });
     } catch (err) {
       setError(errorMessage(err));
     } finally {
@@ -69,6 +70,13 @@ export default function Register() {
           <label htmlFor="track" className={labelClass}>Challenge track <span className="text-red-600">*</span></label>
           <TrackSelect id="track" value={track} onChange={setTrack} placeholder="Choose your track" />
         </div>
+                <label className="flex items-start gap-3 text-sm text-slate-700">
+          <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)}
+            className="mt-0.5 h-4 w-4 accent-brand" />
+          <span>
+            I agree to the <Link to="/privacy" target="_blank" className="font-semibold text-brand">terms and privacy policy</Link>.
+          </span>
+        </label>
         <button type="submit" disabled={busy} className={`${primaryBtn} w-full`}>
           <UserPlus size={18} /> {busy ? "Creating account…" : "Create account"}
         </button>

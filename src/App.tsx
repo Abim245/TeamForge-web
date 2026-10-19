@@ -2,26 +2,59 @@ import { Route, Routes } from "react-router-dom";
 import PublicLayout from "./components/PublicLayout";
 import WorkspaceLayout from "./components/WorkspaceLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+import AdminLayout from "./components/AdminLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import Privacy from "./pages/Privacy";
+import PublicProject from "./pages/PublicProject";
+import Announcements from "./pages/Announcement";
+import Notifications from "./pages/Notification";
+import Requests from "./pages/Request";
 import CreateProject from "./pages/CreateProject";
 import ProjectDetail from "./pages/ProjectDetail";
-import Requests from "./pages/Request";
+import AdminOverview from "./pages/admin/Overview";
+import Participants from "./pages/admin/Participant";
+import AdminProjects from "./pages/admin/Project";
+import ProjectReview from "./pages/admin/ProjectReview";
+import AnnouncementsAdmin from "./pages/admin/AnnouncementAdmin";
+import SettingsAdmin from "./pages/admin/SettingAdmin";
 
 export default function App() {
   return (
     <Routes>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/showcase/:id" element={<PublicProject />} />
+        <Route path="/announcements" element={<Announcements />} />
+        <Route path="/privacy" element={<Privacy />} />
       </Route>
+
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+
       <Route element={<ProtectedRoute />}>
         <Route element={<WorkspaceLayout />}>
           <Route path="/projects/new" element={<CreateProject />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/requests" element={<Requests />} />
+          <Route path="/notifications" element={<Notifications />} />
 
-          <Route path="/projects/:id" element={<ProjectDetail />} /><Route path="/requests" element={<Requests />} />
+          <Route path="/admin" element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<AdminOverview />} />
+              <Route path="participants" element={<Participants />} />
+              <Route path="projects" element={<AdminProjects />} />
+              <Route path="projects/:id" element={<ProjectReview />} />
+              <Route path="announcements" element={<AnnouncementsAdmin />} />
+              <Route path="settings" element={<SettingsAdmin />} />
+            </Route>
+          </Route>
         </Route>
       </Route>
     </Routes>
