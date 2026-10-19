@@ -49,6 +49,9 @@ export default function Login() {
           <label htmlFor="password" className={labelClass}>Password <span className="text-red-600">*</span></label>
           <PasswordInput id="password" value={password} onChange={setPassword} autoComplete="current-password" />
         </div>
+         <div className="mt-2 text-right">
+            <Link to="/forgot-password" className="text-sm font-semibold text-brand">Forgot password?</Link>
+          </div>
         <button type="submit" disabled={busy} className={`${primaryBtn} w-full`}>
           <LogIn size={18} /> {busy ? "Signing in…" : "Sign in"}
         </button>
