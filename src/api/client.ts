@@ -19,3 +19,7 @@ export function errorMessage(err: unknown): string {
   }
   return "Something went wrong";
 }
+
+export function errorData(err: unknown) {
+  return axios.isAxiosError(err) ? err.response?.data : undefined;
+}

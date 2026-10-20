@@ -189,3 +189,91 @@ export interface AdminProjectRow {
   lead: { _id: string; name: string; email: string } | null;
   createdAt: string;
 }
+
+export type JudgingStatus = "CLOSED" | "OPEN" | "FINALIZED";
+export type ScoreStatus = "NOT_STARTED" | "DRAFT" | "SUBMITTED" | "CONFLICT";
+
+export interface Criterion {
+  _id: string;
+  name: string;
+  description: string;
+  weight: number;
+  maxScore: number;
+}
+
+export interface JudgeProjectRow {
+  _id: string;
+  name: string;
+  description: string;
+  track: Track;
+  status: ScoreStatus;
+}
+
+export interface JudgeProjectDetail {
+  status: JudgingStatus;
+  criteria: Criterion[];
+  project: {
+    _id: string;
+    name: string;
+    description: string;
+    track: Track;
+    problemStatement: string;
+    proposedSolution: string;
+    members: { _id: string; name: string; title: string }[];
+    submission: {
+      summary: string;
+      repoUrl: string;
+      demoUrl: string;
+      presentationUrl: string;
+      docsUrl: string;
+      screenshots: string[];
+    };
+  };
+  score: {
+    status: "DRAFT" | "SUBMITTED" | "CONFLICT";
+    scores: { criterion: string; value: number }[];
+    feedback: string;
+    conflictBy: "JUDGE" | "ADMIN" | null;
+    conflictNote: string;
+  } | null;
+}
+
+export interface JudgingOverview {
+  status: JudgingStatus;
+  resultsPublished: boolean;
+  minJudgesPerProject: number;
+  criteria: Criterion[];
+  counts: { judges: number; eligibleProjects: number; submittedScores: number; conflicts: number; drafts: number };
+  judges: { _id: string; name: string; email: string; submitted: number }[];
+}
+
+export interface ResultJudge {
+  scoreId: string;
+  judgeId: string;
+  name: string;
+  status: "DRAFT" | "SUBMITTED" | "CONFLICT";
+  conflictBy: "JUDGE" | "ADMIN" | null;
+  total: number | null;
+}
+
+export interface ResultRow {
+  projectId: string;
+  name: string;
+  track: Track;
+  judgeCount: number;
+  conflicts: number;
+  drafts: number;
+  average: number | null;
+  perCriterion: { criterion: string; name: string; average: number; maxScore: number }[];
+  judges: ResultJudge[];
+  rank: number | null;
+}
+
+export interface JudgingFeedback {
+  label: ProjectLabel;
+  rank: number | null;
+  average: number | null;
+  judgeCount: number;
+  perCriterion: { criterion: string; name: string; average: number; maxScore: number }[];
+  comments: string[];
+}

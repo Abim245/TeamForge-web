@@ -3,6 +3,7 @@ import { api, errorMessage } from "../api/client";
 import Badge from "../components/Badge";
 import { formatDate } from "../format";
 import { card } from "../style";
+import CriteriaCard from "../components/CriteriaCard";
 import type { AnnouncementItem, SettingsData } from "../type";
 
 interface KeyDate {
@@ -66,7 +67,7 @@ export default function Announcements() {
           })}
         </ul>
       </section>
-
+      <CriteriaCard />
       <section className="mt-10">
         <h2 className="text-lg font-semibold">Announcements</h2>
         {!loading && posts.length === 0 && <p className="mt-3 text-sm text-slate-500">No announcements yet.</p>}

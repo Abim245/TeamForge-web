@@ -21,6 +21,7 @@ export default function PublicLayout() {
               <>
                 <Link to="/requests" className={link}>Requests</Link>
                 {user.role === "ADMIN" && <Link to="/admin" className={link}>Admin</Link>}
+                {user.role === "JUDGE" && <Link to="/judging" className={link}>Judging</Link>}
                 <NotificationBell />
                 <span className="flex items-center gap-2 text-sm font-medium">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600">

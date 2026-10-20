@@ -22,7 +22,10 @@ import AdminProjects from "./pages/admin/Project";
 import ProjectReview from "./pages/admin/ProjectReview";
 import AnnouncementsAdmin from "./pages/admin/AnnouncementAdmin";
 import SettingsAdmin from "./pages/admin/SettingAdmin";
-
+import JudgeRoute from "./components/JudgeRoute";
+import Judging from "./pages/Judging";
+import JudgeProject from "./pages/JudgeProject";
+import JudgingAdmin from "./pages/admin/JudgingAdmin";
 export default function App() {
   return (
     <Routes>
@@ -44,12 +47,16 @@ export default function App() {
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/notifications" element={<Notifications />} />
-
+          <Route path="/judging" element={<JudgeRoute />}>
+            <Route index element={<Judging />} />
+            <Route path=":id" element={<JudgeProject />} />
+          </Route>
           <Route path="/admin" element={<AdminRoute />}>
             <Route element={<AdminLayout />}>
               <Route index element={<AdminOverview />} />
               <Route path="participants" element={<Participants />} />
               <Route path="projects" element={<AdminProjects />} />
+              <Route path="judging" element={<JudgingAdmin />} />
               <Route path="projects/:id" element={<ProjectReview />} />
               <Route path="announcements" element={<AnnouncementsAdmin />} />
               <Route path="settings" element={<SettingsAdmin />} />
