@@ -3,7 +3,9 @@ import PublicLayout from "./components/PublicLayout";
 import WorkspaceLayout from "./components/WorkspaceLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
-import AdminLayout from "./components/AdminLayout";
+import AdminShell from "./components/AdminShell";
+import JudgeRoute from "./components/JudgeRoute";
+import MentorRoute from "./components/MentorRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,20 +18,19 @@ import Notifications from "./pages/Notification";
 import Requests from "./pages/Request";
 import CreateProject from "./pages/CreateProject";
 import ProjectDetail from "./pages/ProjectDetail";
+import Judging from "./pages/Judging";
+import JudgeProject from "./pages/JudgeProject";
+import Mentoring from "./pages/Mentoring";
+import MentorTeam from "./pages/MentorTeam";
 import AdminOverview from "./pages/admin/Overview";
 import Participants from "./pages/admin/Participant";
 import AdminProjects from "./pages/admin/Project";
 import ProjectReview from "./pages/admin/ProjectReview";
 import AnnouncementsAdmin from "./pages/admin/AnnouncementAdmin";
 import SettingsAdmin from "./pages/admin/SettingAdmin";
-import JudgeRoute from "./components/JudgeRoute";
-import Judging from "./pages/Judging";
-import JudgeProject from "./pages/JudgeProject";
 import JudgingAdmin from "./pages/admin/JudgingAdmin";
-import MentorRoute from "./components/MentorRoute";
-import Mentoring from "./pages/Mentoring";
-import MentorTeam from "./pages/MentorTeam";
 import MentoringAdmin from "./pages/admin/MentoringAdmin";
+
 export default function App() {
   return (
     <Routes>
@@ -46,6 +47,7 @@ export default function App() {
       <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route element={<ProtectedRoute />}>
+        {/* participants, judges and mentors */}
         <Route element={<WorkspaceLayout />}>
           <Route path="/projects/new" element={<CreateProject />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
@@ -61,18 +63,20 @@ export default function App() {
             <Route index element={<Mentoring />} />
             <Route path="teams/:id" element={<MentorTeam />} />
           </Route>
+        </Route>
 
-          <Route path="/admin" element={<AdminRoute />}>
-            <Route element={<AdminLayout />}>
-              <Route index element={<AdminOverview />} />
-              <Route path="participants" element={<Participants />} />
-              <Route path="projects" element={<AdminProjects />} />
-              <Route path="judging" element={<JudgingAdmin />} />
-              <Route path="mentoring" element={<MentoringAdmin />} />
-              <Route path="projects/:id" element={<ProjectReview />} />
-              <Route path="announcements" element={<AnnouncementsAdmin />} />
-              <Route path="settings" element={<SettingsAdmin />} />
-            </Route>
+        {/* admins get their own dashboard */}
+        <Route path="/admin" element={<AdminRoute />}>
+          <Route element={<AdminShell />}>
+            <Route index element={<AdminOverview />} />
+            <Route path="participants" element={<Participants />} />
+            <Route path="projects" element={<AdminProjects />} />
+            <Route path="projects/:id" element={<ProjectReview />} />
+            <Route path="announcements" element={<AnnouncementsAdmin />} />
+            <Route path="judging" element={<JudgingAdmin />} />
+            <Route path="mentoring" element={<MentoringAdmin />} />
+            <Route path="settings" element={<SettingsAdmin />} />
+            <Route path="notifications" element={<Notifications />} />
           </Route>
         </Route>
       </Route>

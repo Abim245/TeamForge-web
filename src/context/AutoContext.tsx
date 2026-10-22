@@ -14,8 +14,7 @@ interface RegisterData {
 interface AuthValue {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (data: RegisterData) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;  register: (data: RegisterData) => Promise<void>;
   logout: () => void;
 }
 
@@ -42,10 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false));
   }, []);
 
+    async function loadMe() {
+    const me = await api.get("/auth/me");
+    const u = toUser(me.data.user);
+    setUser(u);
+    return u;
+  }
+
   async function login(email: string, password: string) {
     const r = await api.post("/auth/login", { email, password });
     localStorage.setItem("token", r.data.token);
-    setUser(toUser(r.data.user));
+    return loadMe();
   }
 
   async function register(data: RegisterData) {

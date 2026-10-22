@@ -24,8 +24,8 @@ export default function Login() {
     setError("");
     setBusy(true);
     try {
-      await login(email.trim(), password);
-      navigate(from, { replace: true });
+      const u = await login(email.trim(), password);
+      navigate(u.role === "ADMIN" && from === "/" ? "/admin" : from, { replace: true });
     } catch (err) {
       setError(errorMessage(err));
     } finally {

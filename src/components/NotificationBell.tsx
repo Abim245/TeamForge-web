@@ -4,7 +4,7 @@ import { Bell } from "lucide-react";
 import { api } from "../api/client";
 import { useAuth } from "../context/AutoContext";
 
-export default function NotificationBell() {
+export default function NotificationBell({ to = "/notifications" }: { to?: string }) {
   const { user } = useAuth();
   const [unread, setUnread] = useState(0);
 
@@ -25,7 +25,7 @@ export default function NotificationBell() {
 
   if (!user) return null;
   return (
-    <Link to="/notifications" aria-label={`Notifications, ${unread} unread`}
+    <Link to={to} aria-label={`Notifications, ${unread} unread`}
       className="relative rounded-lg p-2 text-slate-600 hover:bg-slate-50">
       <Bell size={20} />
       {unread > 0 && (
