@@ -13,14 +13,16 @@ import SubmissionTab from "../components/SubmissionTab";
 import ResultsTab from "../components/ResultTab";
 import TeamPanel from "../components/TeamPanel";
 import type { Task, WorkspaceData } from "../type";
+import MentoringTab from "../components/MentoringTab";
 
-type TabKey = "overview" | "tasks" | "milestones" | "submission" | "results";
-
+type TabKey = "overview" | "tasks" | "milestones" | "submission" | "mentoring" | "results";
 const TABS: { key: TabKey; label: string }[] = [
   { key: "overview", label: "Overview" },
   { key: "tasks", label: "Tasks" },
   { key: "milestones", label: "Milestones" },
   { key: "submission", label: "Submission" },
+  { key: "mentoring", label: "Mentoring" },
+  { key: "results", label: "Results" }
 ];
 
 export default function ProjectDetail() {
@@ -114,6 +116,7 @@ export default function ProjectDetail() {
           {tab === "tasks" && <TasksTab {...tabProps} tasks={tasks} />}
           {tab === "milestones" && <MilestonesTab {...tabProps} />}
           {tab === "submission" && <SubmissionTab {...tabProps} />}
+          {tab === "mentoring" && <MentoringTab {...tabProps} />}
           {tab === "results" && <ResultsTab {...tabProps} />}
         </section>
 

@@ -6,6 +6,7 @@ const tabs = [
   { to: "/admin/projects", label: "Projects" },
   { to: "/admin/announcements", label: "Announcements" },
   { to: "/admin/judging", label: "Judging" },
+    { to: "/admin/mentoring", label: "Mentoring" },
   { to: "/admin/settings", label: "Settings" },
 ];
 

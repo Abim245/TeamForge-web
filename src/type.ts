@@ -277,3 +277,104 @@ export interface JudgingFeedback {
   perCriterion: { criterion: string; name: string; average: number; maxScore: number }[];
   comments: string[];
 }
+
+
+export type SessionStatus = "PROPOSED" | "CONFIRMED" | "CANCELLED" | "COMPLETED";
+
+export interface MentorRef {
+  _id: string;
+  name: string;
+}
+
+export interface SessionItem {
+  _id: string;
+  project: { _id: string; name: string } | null;
+  mentor: MentorRef | null;
+  startsAt: string;
+  endsAt: string;
+  durationMinutes: number;
+  topic: string;
+  meetingLink: string;
+  status: SessionStatus;
+  proposedBy: "TEAM" | "MENTOR";
+  youAre: "TEAM" | "MENTOR";
+  canConfirm: boolean;
+  canComplete: boolean;
+  canChange: boolean;
+}
+
+export interface MentorFeedbackItem {
+  _id: string;
+  mentor?: MentorRef | null;
+  summary: string;
+  strengths: string;
+  improvements: string;
+  nextSteps: string;
+  createdAt: string;
+}
+
+export interface MentoringData {
+  mentors: MentorRef[];
+  canRequest: boolean;
+  request: {
+    _id: string;
+    topic: string;
+    message: string;
+    status: "PENDING" | "ASSIGNED" | "DECLINED";
+    note: string;
+    createdAt: string;
+  } | null;
+  sessions: SessionItem[];
+  feedback: MentorFeedbackItem[];
+}
+
+export interface MentorTeamRow {
+  _id: string;
+  name: string;
+  description: string;
+  track: Track;
+  submitted: boolean;
+  memberCount: number;
+}
+
+export interface MentorTeamDetail {
+  project: {
+    _id: string;
+    name: string;
+    description: string;
+    track: Track;
+    submitted: boolean;
+    problemStatement: string;
+    proposedSolution: string;
+    members: { _id: string; name: string; title: string }[];
+    milestones: { _id: string; title: string; dueDate?: string; done: boolean }[];
+    updates: { _id: string; text: string; createdAt: string; author: string }[];
+    submission: {
+      summary: string;
+      repoUrl: string;
+      demoUrl: string;
+      presentationUrl: string;
+      docsUrl: string;
+      screenshots: string[];
+    };
+  };
+  tasks: { _id: string; title: string; status: "TODO" | "DONE"; assignee: string; links: string[] }[];
+  sessions: SessionItem[];
+  feedback: MentorFeedbackItem[];
+}
+
+type AdminRef = { _id: string; name: string; email?: string; track?: Track } | null;
+
+export interface AdminMentoring {
+  maxMentorsPerProject: number;
+  requests: {
+    _id: string;
+    topic: string;
+    message: string;
+    createdAt: string;
+    project: AdminRef;
+    requestedBy: AdminRef;
+  }[];
+  assignments: { _id: string; project: AdminRef; mentor: AdminRef }[];
+  mentors: { _id: string; name: string; email: string; activeTeams: number }[];
+}

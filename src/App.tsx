@@ -26,6 +26,10 @@ import JudgeRoute from "./components/JudgeRoute";
 import Judging from "./pages/Judging";
 import JudgeProject from "./pages/JudgeProject";
 import JudgingAdmin from "./pages/admin/JudgingAdmin";
+import MentorRoute from "./components/MentorRoute";
+import Mentoring from "./pages/Mentoring";
+import MentorTeam from "./pages/MentorTeam";
+import MentoringAdmin from "./pages/admin/MentoringAdmin";
 export default function App() {
   return (
     <Routes>
@@ -50,6 +54,10 @@ export default function App() {
           <Route path="/judging" element={<JudgeRoute />}>
             <Route index element={<Judging />} />
             <Route path=":id" element={<JudgeProject />} />
+            <Route path="/mentoring" element={<MentorRoute />}>
+            <Route index element={<Mentoring />} />
+            <Route path="teams/:id" element={<MentorTeam />} />
+          </Route>
           </Route>
           <Route path="/admin" element={<AdminRoute />}>
             <Route element={<AdminLayout />}>
@@ -57,6 +65,7 @@ export default function App() {
               <Route path="participants" element={<Participants />} />
               <Route path="projects" element={<AdminProjects />} />
               <Route path="judging" element={<JudgingAdmin />} />
+              <Route path="mentoring" element={<MentoringAdmin />} />
               <Route path="projects/:id" element={<ProjectReview />} />
               <Route path="announcements" element={<AnnouncementsAdmin />} />
               <Route path="settings" element={<SettingsAdmin />} />

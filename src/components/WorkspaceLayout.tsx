@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Bell, FolderPlus, Gavel, Home, Inbox, LogOut, Megaphone, ShieldCheck } from "lucide-react";
+import { Bell, FolderPlus, Gavel, GraduationCap, Home, Inbox, LogOut, Megaphone, ShieldCheck } from "lucide-react";
 import Logo from "./Logo";
 import { useAuth } from "../context/AutoContext";
 import { TRACK_LABELS } from "../type";
@@ -34,6 +34,10 @@ export default function WorkspaceLayout() {
           )}
           {user?.role === "JUDGE" && (
             <NavLink to="/judging" className={navClass}><Gavel size={18} /> Judging</NavLink>
+          )}
+                    
+            {user?.role === "MENTOR" && (
+            <NavLink to="/mentoring" className={navClass}><GraduationCap size={18} /> Mentoring</NavLink>
           )}
         </nav>
 
