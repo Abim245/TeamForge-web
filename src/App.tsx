@@ -51,24 +51,27 @@ export default function App() {
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/notifications" element={<Notifications />} />
+
           <Route path="/judging" element={<JudgeRoute />}>
             <Route index element={<Judging />} />
             <Route path=":id" element={<JudgeProject />} />
+          </Route>
+
           <Route path="/mentoring" element={<MentorRoute />}>
             <Route index element={<Mentoring />} />
             <Route path="teams/:id" element={<MentorTeam />} />
           </Route>
-          </Route>
+
           <Route path="/admin" element={<AdminRoute />}>
             <Route element={<AdminLayout />}>
-            <Route index element={<AdminOverview />} />
-            <Route path="participants" element={<Participants />} />
-            <Route path="projects" element={<AdminProjects />} />
-            <Route path="judging" element={<JudgingAdmin />} />
-            <Route path="mentoring" element={<MentoringAdmin />} />
-            <Route path="projects/:id" element={<ProjectReview />} />
-            <Route path="announcements" element={<AnnouncementsAdmin />} />
-            <Route path="settings" element={<SettingsAdmin />} />
+              <Route index element={<AdminOverview />} />
+              <Route path="participants" element={<Participants />} />
+              <Route path="projects" element={<AdminProjects />} />
+              <Route path="judging" element={<JudgingAdmin />} />
+              <Route path="mentoring" element={<MentoringAdmin />} />
+              <Route path="projects/:id" element={<ProjectReview />} />
+              <Route path="announcements" element={<AnnouncementsAdmin />} />
+              <Route path="settings" element={<SettingsAdmin />} />
             </Route>
           </Route>
         </Route>
