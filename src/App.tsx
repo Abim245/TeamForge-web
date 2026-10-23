@@ -1,12 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import PublicLayout from "./components/PublicLayout";
 import WorkspaceLayout from "./components/WorkspaceLayout";
+import DashboardShell from "./components/DashboardShell";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ParticipantRoute from "./components/ParticipantRoute";
 import AdminRoute from "./components/AdminRoute";
-import AdminShell from "./components/AdminShell";
 import JudgeRoute from "./components/JudgeRoute";
 import MentorRoute from "./components/MentorRoute";
-import Home from "./pages/Home";
+import RootRoute from "./components/RootRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -35,7 +36,7 @@ export default function App() {
   return (
     <Routes>
       <Route element={<PublicLayout />}>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<RootRoute />} />
         <Route path="/showcase/:id" element={<PublicProject />} />
         <Route path="/announcements" element={<Announcements />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -47,27 +48,39 @@ export default function App() {
       <Route path="/reset-password" element={<ResetPassword />} />
 
       <Route element={<ProtectedRoute />}>
-        {/* participants, judges and mentors */}
-        <Route element={<WorkspaceLayout />}>
-          <Route path="/projects/new" element={<CreateProject />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
-          <Route path="/requests" element={<Requests />} />
-          <Route path="/notifications" element={<Notifications />} />
+        {/* participants */}
+        <Route element={<ParticipantRoute />}>
+          <Route element={<WorkspaceLayout />}>
+            <Route path="/projects/new" element={<CreateProject />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
+            <Route path="/requests" element={<Requests />} />
+            <Route path="/notifications" element={<Notifications />} />
+          </Route>
+        </Route>
 
-          <Route path="/judging" element={<JudgeRoute />}>
+        {/* judges */}
+        <Route path="/judging" element={<JudgeRoute />}>
+          <Route element={<DashboardShell role="JUDGE" />}>
             <Route index element={<Judging />} />
+            <Route path="announcements" element={<Announcements />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path=":id" element={<JudgeProject />} />
           </Route>
+        </Route>
 
-          <Route path="/mentoring" element={<MentorRoute />}>
+        {/* mentors */}
+        <Route path="/mentoring" element={<MentorRoute />}>
+          <Route element={<DashboardShell role="MENTOR" />}>
             <Route index element={<Mentoring />} />
+            <Route path="announcements" element={<Announcements />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path="teams/:id" element={<MentorTeam />} />
           </Route>
         </Route>
 
-        {/* admins get their own dashboard */}
+        {/* admins */}
         <Route path="/admin" element={<AdminRoute />}>
-          <Route element={<AdminShell />}>
+          <Route element={<DashboardShell role="ADMIN" />}>
             <Route index element={<AdminOverview />} />
             <Route path="participants" element={<Participants />} />
             <Route path="projects" element={<AdminProjects />} />

@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { api, errorMessage } from "../api/client";
 import { formatDate } from "../format";
 import type { NotificationItem } from "../type";
+import { useAuth } from "../context/AutoContext";
+import { linkFor } from "../staffLink";
 
+const { user } = useAuth();
 export default function Notifications() {
   const navigate = useNavigate();
   const [items, setItems] = useState<NotificationItem[]>([]);
@@ -33,7 +36,8 @@ export default function Notifications() {
       await api.patch(`/notifications/${n._id}/read`).catch(() => {});
       changed();
     }
-    if (n.link.startsWith("/") && !n.link.startsWith("//")) navigate(n.link);
+    const target = linkFor(user?.role, n.link);
+    if (target.startsWith("/") && !target.startsWith("//")) navigate(target);
     else load();
   }
 

@@ -7,6 +7,7 @@ import PasswordInput from "../components/PasswordInput";
 import { useAuth } from "../context/AutoContext";
 import { errorMessage } from "../api/client";
 import { inputClass, labelClass, primaryBtn } from "../style";
+import { homeFor } from "../staffLink";
 
 export default function Login() {
   const { login } = useAuth();
@@ -25,7 +26,7 @@ export default function Login() {
     setBusy(true);
     try {
       const u = await login(email.trim(), password);
-      navigate(u.role === "ADMIN" && from === "/" ? "/admin" : from, { replace: true });
+      navigate(from === "/" ? homeFor(u.role) : from, { replace: true });
     } catch (err) {
       setError(errorMessage(err));
     } finally {
