@@ -6,8 +6,9 @@ import type { NotificationItem } from "../type";
 import { useAuth } from "../context/AutoContext";
 import { linkFor } from "../staffLink";
 
-const { user } = useAuth();
+
 export default function Notifications() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
