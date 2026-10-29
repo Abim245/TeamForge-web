@@ -4,8 +4,7 @@ import { Bell } from "lucide-react";
 import { api } from "../api/client";
 import { useAuth } from "../context/AutoContext";
 
-export default function NotificationBell({ to = "/notifications" }: { to?: string }) {
-  const { user } = useAuth();
+export default function NotificationBell({ to = "/notifications", tone = "light" }: { to?: string; tone?: "light" | "dark" }) {  const { user } = useAuth();
   const [unread, setUnread] = useState(0);
 
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function NotificationBell({ to = "/notifications" }: { to?: strin
   if (!user) return null;
   return (
     <Link to={to} aria-label={`Notifications, ${unread} unread`}
-      className="relative rounded-lg p-2 text-slate-600 hover:bg-slate-50">
+      className={`relative rounded-lg p-2 ${tone === "dark" ? "text-slate-300 hover:bg-slate-600" : "text-slate-600 hover:bg-slate-50"}`}>
       <Bell size={20} />
       {unread > 0 && (
         <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">

@@ -20,12 +20,12 @@ export default function JoinRequestButton({ projectId }: { projectId: string }) 
     }
   }
 
-  if (state === "sent") return <p className="text-sm font-semibold text-emerald-700">Request sent. The team lead will respond.</p>;
+  if (state === "sent") return <p className="text-sm font-semibold text-emerald-300">Request sent. The team lead will respond.</p>;
 
   if (state === "idle") {
     return (
       <button onClick={() => setState("open")}
-        className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">
+        className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-royal hover:opacity-90">
         Request to join
       </button>
     );
@@ -35,14 +35,15 @@ export default function JoinRequestButton({ projectId }: { projectId: string }) 
     <div className="space-y-2">
       <textarea value={message} onChange={(e) => setMessage(e.target.value)} maxLength={300} rows={2}
         placeholder="Optional note to the team lead"
-        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20" />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+        className="w-full rounded-lg border border-[#3b3d9e] bg-ink px-3 py-2 text-sm text-white outline-none placeholder:text-indigo-300 focus:border-gold" />
+      {error && <p className="text-sm text-red-300">{error}</p>}
       <div className="flex gap-2">
         <button onClick={send} disabled={busy}
-          className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60">
+          className="rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-royal hover:opacity-90 disabled:opacity-60">
           {busy ? "Sending…" : "Send request"}
         </button>
-        <button onClick={() => setState("idle")} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold">
+        <button onClick={() => setState("idle")}
+          className="rounded-lg border border-[#3b3d9e] px-4 py-2 text-sm font-semibold text-indigo-100 hover:bg-white/5">
           Cancel
         </button>
       </div>

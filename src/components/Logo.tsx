@@ -1,14 +1,18 @@
-export default function Logo({ light = false }: { light?: boolean }) {
+interface Props {
+  light?: boolean; // for dark backgrounds
+  large?: boolean; // the public header
+}
+
+export default function Logo({ light = false, large = false }: Props) {
   return (
     <div className="flex items-center gap-3">
-      <span
-        className={`flex h-9 w-9 items-center justify-center rounded-lg text-lg font-bold ${
-          light ? "bg-white text-navy" : "bg-brand text-white"
-        }`}
-      >
-        T
+      <img src="/caa-globe.jpg" alt=""
+        className={`shrink-0 rounded-full bg-white object-cover ${large ? "h-11 w-11" : "h-9 w-9"}`} />
+      <span className={`font-display font-bold leading-tight tracking-wider ${large ? "text-lg sm:text-xl" : "text-sm"} ${
+        light ? "text-white" : "text-royal"
+      }`}>
+        CYBER ASCEND AFRICA
       </span>
-      <span className={`text-xl font-semibold ${light ? "text-white" : "text-slate-900"}`}>TeamForge</span>
     </div>
   );
 }

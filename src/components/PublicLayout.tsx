@@ -1,43 +1,62 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Plus } from "lucide-react";
 import Logo from "./Logo";
 import NotificationBell from "./NotificationBell";
 import { useAuth } from "../context/AutoContext";
-import { primaryBtn } from "../style";
-
-const link = "text-sm font-medium text-slate-500 hover:text-slate-900";
+import { homeFor } from "../staffLink";
 
 export default function PublicLayout() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const { pathname, search } = useLocation();
+  const scope = new URLSearchParams(search).get("scope") ?? "showcase";
+  const onHome = pathname === "/";
+  const staff = !!user && user.role !== "PARTICIPANT";
+  const participant = !!user && !staff;
+
+  const items = [
+    { label: "Showcase", to: "/", active: onHome && scope !== "recruiting" && scope !== "mine" },
+    { label: "Find a team", to: "/?scope=recruiting", active: onHome && scope === "recruiting" },
+    ...(participant ? [{ label: "My projects", to: "/?scope=mine", active: onHome && scope === "mine" }] : []),
+    { label: "Announcements", to: "/announcements", active: pathname === "/announcements" },
+    ...(participant ? [{ label: "Requests", to: "/requests", active: false }] : []),
+    ...(staff ? [{ label: "Dashboard", to: homeFor(user?.role), active: false }] : []),
+  ];
+
   return (
     <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-2">
-          <Link to="/"><Logo /></Link>
-          <nav className="flex flex-wrap items-center gap-4">
-            <Link to="/" className={link}>Explore projects</Link>
-            <Link to="/announcements" className={link}>Announcements</Link>
+      <header className="border-b border-[#1d1d70] bg-ink">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-4 lg:px-14">
+          <Link to="/"><Logo light large /></Link>
+          <nav aria-label="Main" className="flex flex-wrap items-center gap-x-7 gap-y-3">
+            {items.map((i) => (
+              <Link key={i.label} to={i.to}
+                className={`text-[15px] ${i.active ? "font-medium text-white" : "text-indigo-200 hover:text-white"}`}>
+                {i.label}
+              </Link>
+            ))}
             {user ? (
               <>
-                <Link to="/requests" className={link}>Requests</Link>
-                {user.role === "ADMIN" && <Link to="/admin" className={link}>Admin</Link>}
-                {user.role === "JUDGE" && <Link to="/judging" className={link}>Judging</Link>}
-                {user.role === "MENTOR" && <Link to="/mentoring" className={link}>Mentoring</Link>}
-                <NotificationBell />
-                <span className="flex items-center gap-2 text-sm font-medium">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600">
+                <NotificationBell tone="dark" />
+                <span className="flex items-center gap-2 text-sm font-medium text-white">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
                     {user.name.charAt(0).toUpperCase()}
                   </span>
                   {user.name}
                 </span>
-                <Link to="/projects/new" className={`${primaryBtn} !px-4 !py-2 text-sm`}>
-                  <Plus size={16} /> New project
-                </Link>
+                <button onClick={logout} className="text-sm text-indigo-200 hover:text-white">Sign out</button>
+                {participant && (
+                  <Link to="/projects/new"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-5 py-2.5 text-[15px] font-semibold text-royal hover:opacity-90">
+                    <Plus size={16} /> New project
+                  </Link>
+                )}
               </>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-medium text-slate-700 hover:text-slate-900">Sign in</Link>
-                <Link to="/register" className={`${primaryBtn} !px-4 !py-2 text-sm`}>Create account</Link>
+                <Link to="/login" className="text-[15px] text-indigo-200 hover:text-white">Sign in</Link>
+                <Link to="/register" className="rounded-lg bg-gold px-5 py-2.5 text-[15px] font-semibold text-royal hover:opacity-90">
+                  Create account
+                </Link>
               </>
             )}
           </nav>

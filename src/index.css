@@ -5,6 +5,11 @@
   --color-navy: #14214a;
   --color-brand: #3a5aa8;
   --color-brand-dark: #2f4a8f;
+  --font-display: "Chakra Petch", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #07073a;
+  --color-ink-soft: #0f0f5c;
+  --color-royal: #030176;
+  --color-gold: #eba119;
 }
 
 body {
